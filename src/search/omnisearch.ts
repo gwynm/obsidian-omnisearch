@@ -141,6 +141,7 @@ export class Omnisearch {
   ): Promise<SearchResult[]> {
 
     const MAX_RESULTS = 200;
+    const MAGIC_TAG= '#star';
 
     if (query.isEmpty()) {
       this.previousResults = []
@@ -198,6 +199,14 @@ export class Omnisearch {
         if ((result.tags ?? []).includes(tag)) {
           result.score *= 100
         }
+      }
+    }
+
+    // Put results with the magic tag (equivalent to 'starred') on top
+    for (const result of results) {
+      console.log('considering', result, 'with tags', result.tags);
+      if ((result.tags ?? []).includes(MAGIC_TAG)) {
+        result.score *= 1000
       }
     }
 
