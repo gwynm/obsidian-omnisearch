@@ -137,7 +137,7 @@ export class Omnisearch {
    */
   public async search(
     query: Query,
-    options: { prefixLength: number; singleFilePath?: string }
+    options: { prefixLength: number; singleFilePath?: string, sortByDate: boolean }
   ): Promise<SearchResult[]> {
 
     const MAX_RESULTS = 200;
@@ -202,9 +202,16 @@ export class Omnisearch {
       }
     }
 
-    // Put results with the magic tag (equivalent to 'starred') on top
+    // If we're in 'date' (vs 'relevance') mode, sort by date
+    if (options.sortByDate || true) {
+      for (const result of results) {
+        const doc = await cacheManager.getDocument(result.id); //TODO performance, we're duplicating the work below
+        result.score = doc.mtime;
+      }
+    }
+
+    // Put results with the magic tag (equivalent to 'starred') on top (in either sort mode)
     for (const result of results) {
-      console.log('considering', result, 'with tags', result.tags);
       if ((result.tags ?? []).includes(MAGIC_TAG)) {
         result.score *= 1000
       }
