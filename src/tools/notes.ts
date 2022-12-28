@@ -49,6 +49,7 @@ export async function openNote(
 
 export async function createNote(name: string, newLeaf = false): Promise<void> {
   try {
+    console.log('creating with', name);
     let pathPrefix: string
     switch (app.vault.getConfig('newFileLocation')) {
       case 'current':
@@ -61,13 +62,22 @@ export async function createNote(name: string, newLeaf = false): Promise<void> {
         pathPrefix = ''
         break
     }
-    await app.workspace.openLinkText(`${pathPrefix}${name}.md`, '', newLeaf)
+    const { initialTags, noteName } = parseName(name);
+    const initialText = `\n\n${initialTags.join(' ')}\n`;
+    await app.vault.create(`${pathPrefix}${noteName}.md`, initialText);
+    await app.workspace.openLinkText(`${pathPrefix}${noteName}.md`, '', newLeaf)
   } catch (e) {
     ;(e as any).message =
       'OmniSearch - Could not create note: ' + (e as any).message
     console.error(e)
     throw e
   }
+}
+
+export function parseName(name: string): { initialTags: string[]; noteName: string } {
+  const initialTags = name.match(/#[\w-]+/g) || [];
+  const noteName = name.replace(/#[\w-]+/g, '').replace('  ', ' ').trim();
+  return { initialTags, noteName };
 }
 
 /**
