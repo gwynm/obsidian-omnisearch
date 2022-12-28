@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { TFile } from 'obsidian'
   import { settings, showExcerpt } from 'src/settings'
   import type { ResultNote } from '../globals'
   import {
@@ -29,6 +30,11 @@
   $: cleanedContent = makeExcerpt(note.content, note.matches[0]?.offset ?? -1)
   $: glyph = false //cacheManager.getLiveDocument(note.path)?.doesNotExist
   $: title = settings.showShortName ? note.basename : note.path
+  $: noteFile =  app.vault.getAbstractFileByPath(note.path);
+  $: modifiedDate = (noteFile instanceof TFile) ? 
+    new Date(noteFile.stat.mtime).toISOString().substring(0,10) 
+    : null;
+
 </script>
 
 <ResultItemContainer
@@ -38,10 +44,11 @@
   on:click
   glyph="{glyph}">
   <div style="display:flex">
-    <div>
-      <div>
+    <div style='flex-grow: 1'>
+      <div style='flex-grow: 1'>
         <span class="omnisearch-result__title">
-          {@html title.replace(reg, highlighter)}
+          <span>{@html title.replace(reg, highlighter)}</span>
+          <span class="omnisearch-result__date">{modifiedDate}</span>
         </span>
 
         {#if note.matches.length > 0}
