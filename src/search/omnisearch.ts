@@ -139,6 +139,9 @@ export class Omnisearch {
     query: Query,
     options: { prefixLength: number; singleFilePath?: string }
   ): Promise<SearchResult[]> {
+
+    const MAX_RESULTS = 200;
+
     if (query.isEmpty()) {
       this.previousResults = []
       return []
@@ -198,7 +201,7 @@ export class Omnisearch {
       }
     }
 
-    results = results.slice(0, 50)
+    results = results.slice(0, MAX_RESULTS)
 
     const documents = await Promise.all(
       results.map(async result => await cacheManager.getDocument(result.id))
