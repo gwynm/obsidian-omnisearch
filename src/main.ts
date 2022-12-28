@@ -215,5 +215,5 @@ function registerAPI(plugin: OmnisearchPlugin): void {
   // @ts-ignore
   globalThis['omnisearch'] = api
   // Deprecated
-  ;(app as any).plugins.plugins.omnisearch.api = api
+  // ;(app as any).plugins.plugins.omnisearch.api = api
 }
