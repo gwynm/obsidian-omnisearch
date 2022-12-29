@@ -34,6 +34,8 @@ export interface OmnisearchSettings extends WeightingSettings {
   showShortName: boolean
   /** Display the small contextual excerpt in search results */
   showExcerpt: boolean
+  /** Sort by date, rather than by relevance */
+  sortByDate: boolean
   /** Render line returns with <br> in excerpts */
   renderLineReturnInExcerpts: boolean
   /** Enable a "create note" button in the Vault Search modal */
@@ -51,6 +53,7 @@ export interface OmnisearchSettings extends WeightingSettings {
  * A store to reactively toggle the `showExcerpt` setting on the fly
  */
 export const showExcerpt = writable(false)
+export const sortByDate = writable(false)
 
 export class SettingsTab extends PluginSettingTab {
   plugin: OmnisearchPlugin
@@ -61,6 +64,10 @@ export class SettingsTab extends PluginSettingTab {
 
     showExcerpt.subscribe(async v => {
       settings.showExcerpt = v
+      await saveSettings(this.plugin)
+    })
+    sortByDate.subscribe(async v => {
+      settings.sortByDate = v
       await saveSettings(this.plugin)
     })
   }
@@ -227,6 +234,18 @@ export class SettingsTab extends PluginSettingTab {
       .addToggle(toggle =>
         toggle.setValue(settings.showExcerpt).onChange(async v => {
           showExcerpt.set(v)
+        })
+      )
+
+    // Sort by date
+    new Setting(containerEl)
+      .setName('Sort by date')
+      .setDesc(
+        'Sorts results newest-to-oldest, rather than by relevance.'
+      )
+      .addToggle(toggle =>
+        toggle.setValue(settings.sortByDate).onChange(async v => {
+          sortByDate.set(v)
         })
       )
 

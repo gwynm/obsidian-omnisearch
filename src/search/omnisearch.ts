@@ -137,7 +137,7 @@ export class Omnisearch {
    */
   public async search(
     query: Query,
-    options: { prefixLength: number; singleFilePath?: string, sortByDate: boolean }
+    options: { prefixLength: number; singleFilePath?: string }
   ): Promise<SearchResult[]> {
 
     const MAX_RESULTS = 200;
@@ -203,7 +203,7 @@ export class Omnisearch {
     }
 
     // If we're in 'date' (vs 'relevance') mode, sort by date
-    if (options.sortByDate || true) {
+    if (settings.sortByDate) {
       for (const result of results) {
         const doc = await cacheManager.getDocument(result.id); //TODO performance, we're duplicating the work below
         result.score = doc.mtime;

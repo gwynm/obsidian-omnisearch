@@ -9,7 +9,7 @@
   import { OmnisearchInFileModal, type OmnisearchVaultModal, } from 'src/components/modals'
   import ResultItemVault from './ResultItemVault.svelte'
   import { Query } from 'src/search/query'
-  import { settings } from '../settings'
+  import { settings, sortByDate } from '../settings'
   import * as NotesIndex from '../notes-index'
   import { cacheManager } from '../cache-manager'
   import { searchEngine } from 'src/search/omnisearch'
@@ -298,6 +298,16 @@
   <div class="prompt-instruction">
     <span class="prompt-instruction-command">ctrl+h</span>
     <span>to toggle excerpts</span>
+  </div>
+  <div class="prompt-instruction">
+    <span class="prompt-instruction-command">ctrl+g</span>
+    <span>
+      {#if $sortByDate}
+        switch to relevance
+      {:else}
+        switch to date
+      {/if}
+    </span>
   </div>
   <div class="prompt-instruction">
     <span class="prompt-instruction-command">esc</span><span>to close</span>

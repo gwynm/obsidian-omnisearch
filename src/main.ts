@@ -3,7 +3,7 @@ import {
   OmnisearchInFileModal,
   OmnisearchVaultModal,
 } from './components/modals'
-import { loadSettings, settings, SettingsTab, showExcerpt } from './settings'
+import { loadSettings, settings, SettingsTab, showExcerpt, sortByDate } from './settings'
 import { eventBus, EventNames, indexingStep, IndexingStepType } from './globals'
 import api from './tools/api'
 import { isFileIndexable } from './tools/utils'
@@ -31,6 +31,9 @@ export default class OmnisearchPlugin extends Plugin {
     eventBus.disable('infile')
     eventBus.on('global', EventNames.ToggleExcerpts, () => {
       showExcerpt.set(!settings.showExcerpt)
+    })
+    eventBus.on('global', EventNames.ToggleSort, () => {
+      sortByDate.set(!settings.sortByDate)
     })
 
     // Commands to display Omnisearch modals

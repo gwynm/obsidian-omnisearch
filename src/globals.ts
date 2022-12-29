@@ -18,6 +18,7 @@ export const eventBus = new EventBus()
 
 export const EventNames = {
   ToggleExcerpts: 'toggle-excerpts',
+  ToggleSort: 'toggle-sort',
 } as const
 
 export const enum IndexingStepType {

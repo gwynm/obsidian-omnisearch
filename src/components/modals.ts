@@ -111,6 +111,11 @@ abstract class OmnisearchModal extends Modal {
     this.scope.register(['Ctrl'], 'H', _e => {
       eventBus.emit(EventNames.ToggleExcerpts)
     })
+
+    // Sorting
+    this.scope.register(['Ctrl'], 'G', _e => {
+      eventBus.emit(EventNames.ToggleSort)
+    })
   }
 }
 
