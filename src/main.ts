@@ -3,6 +3,7 @@ import {
   OmnisearchInFileModal,
   OmnisearchVaultModal,
 } from './components/modals'
+import { VIEW_TYPE_OMNISEARCH_VAULT, OmnisearchVaultView } from './components/views'
 import { loadSettings, settings, SettingsTab, showExcerpt, sortByDate } from './settings'
 import { eventBus, EventNames, indexingStep, IndexingStepType } from './globals'
 import api from './tools/api'
@@ -25,6 +26,11 @@ export default class OmnisearchPlugin extends Plugin {
     if (settings.ribbonIcon) {
       this.addRibbonButton()
     }
+
+    this.registerView(
+      VIEW_TYPE_OMNISEARCH_VAULT,
+      (leaf) => new OmnisearchVaultView(leaf)
+    );
 
     this.addSettingTab(new SettingsTab(this))
     eventBus.disable('vault')
@@ -98,15 +104,32 @@ export default class OmnisearchPlugin extends Plugin {
     // @ts-ignore
     delete globalThis['omnisearch']
 
+    this.app.workspace.detachLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT);
+
     // Clear cache when disabling Omnisearch
     if (process.env.NODE_ENV === 'production') {
       await database.clearCache()
     }
   }
 
+  async activateView(): Promise<void> {
+    this.app.workspace.detachLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT);
+
+    await this.app.workspace.getLeftLeaf(false).setViewState({
+      type: VIEW_TYPE_OMNISEARCH_VAULT,
+      active: true,
+    });
+
+    this.app.workspace.revealLeaf(
+      this.app.workspace.getLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT)[0]
+    );
+  }
+
   addRibbonButton(): void {
-    this.ribbonButton = this.addRibbonIcon('search', 'Omnisearch', _evt => {
-      new OmnisearchVaultModal(app).open()
+    this.ribbonButton = this.addRibbonIcon('search', 'Omnisearch Panel', _evt => {
+      console.log('activating panel');
+      this.activateView();
+      // new OmnisearchVaultModal(app).open()
     })
   }
 
