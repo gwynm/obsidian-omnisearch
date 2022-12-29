@@ -47,7 +47,7 @@ export default class OmnisearchPlugin extends Plugin {
       id: 'show-modal',
       name: 'Vault search',
       callback: () => {
-        new OmnisearchVaultModal(app).open()
+        this.activateView();
       },
     })
 
