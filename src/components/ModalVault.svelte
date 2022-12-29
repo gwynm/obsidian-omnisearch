@@ -3,7 +3,7 @@
   import { onDestroy, onMount, tick } from 'svelte'
   import InputSearch from './InputSearch.svelte'
   import ModalContainer from './ModalContainer.svelte'
-  import { eventBus, indexingStep, IndexingStepType, type ResultNote, } from 'src/globals'
+  import { eventBus, EventNames, indexingStep, IndexingStepType, type ResultNote, } from 'src/globals'
   import { createNote, openNote } from 'src/tools/notes'
   import { getCtrlKeyLabel, getExtension, isFilePDF, loopIndex, } from 'src/tools/utils'
   import { OmnisearchInFileModal, type OmnisearchVaultModal, } from 'src/components/modals'
@@ -69,6 +69,8 @@
     eventBus.on('vault', 'arrow-down', () => moveIndex(1))
     eventBus.on('vault', 'prev-search-history', prevSearchHistory)
     eventBus.on('vault', 'next-search-history', nextSearchHistory)
+    eventBus.on('vault', EventNames.ToggleSort, updateResults);
+
     await NotesIndex.refreshIndex()
     if (settings.showPreviousQueryResults) {
       previousQuery = (await cacheManager.getSearchHistory())[0]
