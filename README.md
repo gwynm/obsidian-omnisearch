@@ -1,3 +1,9 @@
+# Omnivelocity
+
+This is a fork of Omnisearch that alters the UI to be similar to [nvAlt](https://brettterpstra.com/projects/nvalt/). The Vault Search is now a left panel (designed to replace both the file browser and the old search panel) rather than a modal.
+
+Original Readme follows:
+
 # Omnisearch for Obsidian
 
 [![Sponsor me](https://img.shields.io/badge/%E2%9D%A4%20Like%20this%20plugin%3F-Sponsor%20me!-ff69b4)](https://github.com/sponsors/scambier)  
