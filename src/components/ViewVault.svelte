@@ -108,7 +108,7 @@
     )
     selectedIndex = 0
     if (resultNotes.length > 0) {
-      openSearchResult(resultNotes[selectedIndex]) // When results change, move to top of list and open it
+      // openSearchResult(resultNotes[selectedIndex]) // When results change, move to top of list and open it
       await scrollIntoView()
     }
   }
