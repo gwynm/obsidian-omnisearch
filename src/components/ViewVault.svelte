@@ -69,6 +69,7 @@
     eventBus.on('vault', 'prev-search-history', prevSearchHistory)
     eventBus.on('vault', 'next-search-history', nextSearchHistory)
     eventBus.on('vault', EventNames.ToggleSort, updateResults);
+    eventBus.on('vault', 'refresh', updateResults);
 
     await NotesIndex.refreshIndex()
     if (settings.showPreviousQueryResults) {
@@ -109,6 +110,7 @@
       (a, b) => b.score - a.score
     )
     selectedIndex = 0
+    openSearchResult(resultNotes[selectedIndex]) // When results change, move to top of list and open it
     await scrollIntoView()
   }
 

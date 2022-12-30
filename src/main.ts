@@ -112,6 +112,7 @@ export default class OmnisearchPlugin extends Plugin {
           if (isFileIndexable(file.path)) {
             await cacheManager.addToLiveCache(file.path)
             searchEngine.addFromPaths([file.path])
+            eventBus.emit('refresh')
           }
         })
       )
@@ -119,6 +120,7 @@ export default class OmnisearchPlugin extends Plugin {
         this.app.vault.on('delete', file => {
           cacheManager.removeFromLiveCache(file.path)
           searchEngine.removeFromPaths([file.path])
+          eventBus.emit('refresh')
         })
       )
       this.registerEvent(
@@ -126,6 +128,9 @@ export default class OmnisearchPlugin extends Plugin {
           if (isFileIndexable(file.path)) {
             await cacheManager.addToLiveCache(file.path)
             NotesIndex.markNoteForReindex(file)
+            /* don't emit refresh. Refreshing search results will also change the
+            active note (since it's set to the first result), which will be very jarring
+            if you're actively editting something else */
           }
         })
       )
@@ -136,6 +141,7 @@ export default class OmnisearchPlugin extends Plugin {
             cacheManager.addToLiveCache(file.path)
             searchEngine.removeFromPaths([oldPath])
             await searchEngine.addFromPaths([file.path])
+            eventBus.emit('refresh')
           }
         })
       )
