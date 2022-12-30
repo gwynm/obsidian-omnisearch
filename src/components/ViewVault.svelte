@@ -28,7 +28,7 @@
   $: {
     resultNotes = []
     searching = true
-    updateResults().then(() => {
+    updateResults(searchQuery).then(() => {
       searching = false
     })
   }
@@ -44,11 +44,11 @@
         indexingStepDesc = 'Indexing files...'
         break
       case IndexingStepType.WritingCache:
-        updateResults()
+        updateResults(searchQuery)
         indexingStepDesc = 'Updating cache...'
         break
       default:
-        updateResults()
+        updateResults(searchQuery)
         indexingStepDesc = ''
         break
     }
@@ -65,8 +65,8 @@
     eventBus.on('vault', 'arrow-down', () => moveIndex(1))
     eventBus.on('vault', 'prev-search-history', prevSearchHistory)
     eventBus.on('vault', 'next-search-history', nextSearchHistory)
-    eventBus.on('vault', EventNames.ToggleSort, updateResults);
-    eventBus.on('vault', 'refresh', updateResults);
+    eventBus.on('vault', EventNames.ToggleSort, () => updateResults(searchQuery));
+    eventBus.on('vault', 'refresh', () => updateResults(searchQuery));
 
     await NotesIndex.refreshIndex()
     if (settings.showPreviousQueryResults) {
@@ -101,8 +101,8 @@
     previousQuery = history[historySearchIndex]
   }
 
-  async function updateResults() {
-    query = new Query(searchQuery || '')
+  async function updateResults(q) {
+    query = new Query(q || '')
     resultNotes = (await searchEngine.getSuggestions(query)).sort(
       (a, b) => b.score - a.score
     )
