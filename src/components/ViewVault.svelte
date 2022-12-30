@@ -208,7 +208,7 @@
   function moveIndex(dir: 1 | -1): void {
     selectedIndex = loopIndex(selectedIndex + dir, resultNotes.length)
     scrollIntoView()
-    openNoteAndCloseModal()
+    openSearchResult(resultNotes[selectedIndex])
   }
 
   async function scrollIntoView(): Promise<void> {
