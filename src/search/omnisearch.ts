@@ -17,8 +17,10 @@ import { Notice, Platform } from 'obsidian'
 import type { Query } from './query'
 import { cacheManager } from '../cache-manager'
 
+const MAGIC_FIND_ALL = 'MAGICFINDALL';
+
 const tokenize = (text: string): string[] => {
-  const tokens = text.split(SPACE_OR_PUNCTUATION)
+  const tokens = text.split(SPACE_OR_PUNCTUATION).concat(MAGIC_FIND_ALL)
   const chsSegmenter = getChsSegmenter()
   if (chsSegmenter) {
     return tokens.flatMap(word =>
@@ -140,15 +142,13 @@ export class Omnisearch {
     options: { prefixLength: number; singleFilePath?: string }
   ): Promise<SearchResult[]> {
 
+
     const MAX_RESULTS = 200;
     const MAGIC_TAG= '#star';
 
-    if (query.isEmpty()) {
-      this.previousResults = []
-      return []
-    }
+    const queryString = query.isEmpty() ? MAGIC_FIND_ALL : query.segmentsToStr();
 
-    let results = this.minisearch.search(query.segmentsToStr(), {
+    let results = this.minisearch.search(queryString, {
       prefix: term => term.length >= options.prefixLength,
       fuzzy: 0.2,
       combineWith: 'AND',
@@ -160,6 +160,7 @@ export class Omnisearch {
         headings3: settings.weightH3,
       },
     })
+
     if (!results.length) return this.previousResults
 
     if (options.singleFilePath) {
@@ -203,7 +204,7 @@ export class Omnisearch {
     }
 
     // If we're in 'date' (vs 'relevance') mode, sort by date
-    if (settings.sortByDate) {
+    if (settings.sortByDate || query.isEmpty()) {
       for (const result of results) {
         const doc = await cacheManager.getDocument(result.id); //TODO performance, we're duplicating the work below
         result.score = doc.mtime;

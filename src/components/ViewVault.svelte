@@ -25,15 +25,12 @@
 
   $: selectedNote = resultNotes[selectedIndex]
   $: searchQuery = searchQuery ?? previousQuery
-  $: if (searchQuery) {
+  $: {
     resultNotes = []
     searching = true
     updateResults().then(() => {
       searching = false
     })
-  } else {
-    searching = false
-    resultNotes = []
   }
   $: {
     switch ($indexingStep) {
@@ -105,13 +102,15 @@
   }
 
   async function updateResults() {
-    query = new Query(searchQuery)
+    query = new Query(searchQuery || '')
     resultNotes = (await searchEngine.getSuggestions(query)).sort(
       (a, b) => b.score - a.score
     )
     selectedIndex = 0
-    openSearchResult(resultNotes[selectedIndex]) // When results change, move to top of list and open it
-    await scrollIntoView()
+    if (resultNotes.length > 0) {
+      openSearchResult(resultNotes[selectedIndex]) // When results change, move to top of list and open it
+      await scrollIntoView()
+    }
   }
 
   function onClick(evt?: MouseEvent | KeyboardEvent) {
@@ -255,7 +254,7 @@
   {/each}
   <div style="text-align: center;">
     {#if !resultNotes.length && searchQuery && !searching}
-      We found 0 result for your search here.
+      No results.
     {:else if searching}
       Searching...
     {/if}
