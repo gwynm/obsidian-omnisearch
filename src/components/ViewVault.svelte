@@ -208,6 +208,7 @@
   function moveIndex(dir: 1 | -1): void {
     selectedIndex = loopIndex(selectedIndex + dir, resultNotes.length)
     scrollIntoView()
+    openNoteAndCloseModal()
   }
 
   async function scrollIntoView(): Promise<void> {
@@ -255,44 +256,19 @@
 
 <div class="prompt-instructions">
   <div class="prompt-instruction">
-    <span class="prompt-instruction-command">↑↓</span><span>to navigate</span>
+    <span class="prompt-instruction-command">ctrl+j / ctrl+k</span><span>to navigate</span>
   </div>
   <div class="prompt-instruction">
-    <span class="prompt-instruction-command">alt ↑↓</span>
-    <span>to cycle history</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">↵</span><span>to open</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">↹</span>
-    <span>to switch to In-File Search</span>
-  </div>
-
-  <br />
-
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">{getCtrlKeyLabel()} ↵</span>
-    <span>to open in a new pane</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">shift ↵</span>
-    <span>to create</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">ctrl shift ↵</span>
-    <span>to create in a new pane</span>
-  </div>
-
-  <br />
-
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">alt ↵</span>
-    <span>to insert a link</span>
+    <span class="prompt-instruction-command">ctrl ↵</span>
+    <span>create</span>
   </div>
   <div class="prompt-instruction">
     <span class="prompt-instruction-command">ctrl+h</span>
-    <span>to toggle excerpts</span>
+    <span>toggle excerpts</span>
+  </div>
+  <div class="prompt-instruction">
+    <span class="prompt-instruction-command">ctrl+d</span>
+    <span>delete</span>
   </div>
   <div class="prompt-instruction">
     <span class="prompt-instruction-command">ctrl+g</span>
@@ -303,8 +279,5 @@
         switch to date
       {/if}
     </span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">esc</span><span>to close</span>
   </div>
 </div>

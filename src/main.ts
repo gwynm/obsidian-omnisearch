@@ -59,6 +59,52 @@ export default class OmnisearchPlugin extends Plugin {
       },
     })
 
+    // Move modal-scoped keyboard shortcuts to global scope
+    this.addCommand({
+      id: 'toggle-excerpts',
+      name: 'Toggle excerpts',
+      hotkeys: [{ modifiers: ['Ctrl'], key: 'h' }],
+      callback: () => {
+        eventBus.emit(EventNames.ToggleExcerpts)
+      }
+    })
+
+    this.addCommand({
+      id: 'toggle-sort',
+      name: 'Toggle sort by date',
+      hotkeys: [{ modifiers: ['Ctrl'], key: 'g' }],
+      callback: () => {
+        eventBus.emit(EventNames.ToggleSort)
+      }
+    })
+
+    this.addCommand({
+      id: 'create-note',
+      name: 'Create a new note',
+      hotkeys: [{ modifiers: ['Ctrl'], key: 'enter' }],
+      callback: () => {
+        eventBus.emit('create-note')
+      }
+    })
+
+    this.addCommand({
+      id: 'arrow-up',
+      name: 'Previous search result',
+      hotkeys: [{ modifiers: ['Ctrl'], key: 'j' }],
+      callback: () => {
+        eventBus.emit('arrow-up')
+      }
+    })
+
+    this.addCommand({
+      id: 'arrow-down',
+      name: 'Next search result',
+      hotkeys: [{ modifiers: ['Ctrl'], key: 'k' }],
+      callback: () => {
+        eventBus.emit('arrow-down')
+      }
+    })
+
     app.workspace.onLayoutReady(async () => {
       // Listeners to keep the search index up-to-date
       this.registerEvent(
@@ -127,9 +173,7 @@ export default class OmnisearchPlugin extends Plugin {
 
   addRibbonButton(): void {
     this.ribbonButton = this.addRibbonIcon('search', 'Omnisearch Panel', _evt => {
-      console.log('activating panel');
       this.activateView();
-      // new OmnisearchVaultModal(app).open()
     })
   }
 
