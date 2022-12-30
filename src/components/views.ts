@@ -4,6 +4,8 @@ import ViewVault from './ViewVault.svelte'
 export const VIEW_TYPE_OMNISEARCH_VAULT = "omnisearch-vault-view";
 
 export class OmnisearchVaultView extends ItemView {
+  private component: ViewVault | null = null;
+
   constructor(leaf: WorkspaceLeaf) {
     super(leaf);
   }
@@ -17,20 +19,21 @@ export class OmnisearchVaultView extends ItemView {
   }
 
   async onOpen() {
-    const container = this.containerEl.children[1];
-    // container.empty();
-    // container.createEl("h4", { text: "Omnisearch Vault View" });
-
-    let cmp = new ViewVault({
+    this.component = new ViewVault({
       target: this.containerEl.children[1],
       props: {
         previousQuery: '',
       },
     })
+  }
 
+  focusSearch() {
+    if (this.component) {
+      this.component.focusSearch();
+    }
   }
 
   async onClose() {
-    // cmp.$destroy();
+    if (this.component) { this.component.$destroy() };
   }
 }

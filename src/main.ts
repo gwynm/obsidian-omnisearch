@@ -159,17 +159,22 @@ export default class OmnisearchPlugin extends Plugin {
   }
 
   async activateView(): Promise<void> {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT);
-
-    await this.app.workspace.getLeftLeaf(false).setViewState({
-      type: VIEW_TYPE_OMNISEARCH_VAULT,
-      active: true,
-    });
-
-    this.app.workspace.revealLeaf(
-      this.app.workspace.getLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT)[0]
-    );
-  }
+    /* If the view exists, switch tab to it, else create it */
+    if (this.app.workspace.getLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT).length) {
+      this.app.workspace.revealLeaf(
+        this.app.workspace.getLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT)[0]
+      )
+    } else {
+      await this.app.workspace.getLeftLeaf(false).setViewState({
+        type: VIEW_TYPE_OMNISEARCH_VAULT,
+        active: true,
+      })
+    }
+    /* Now set the keyboard focus to the search input. */
+    this.app.workspace.setActiveLeaf(this.app.workspace.getLeavesOfType(VIEW_TYPE_OMNISEARCH_VAULT)[0]);
+    const view = this.app.workspace.getActiveViewOfType(OmnisearchVaultView)
+    if (view) { view.focusSearch() };
+   }
 
   addRibbonButton(): void {
     this.ribbonButton = this.addRibbonIcon('search', 'Omnisearch Panel', _evt => {

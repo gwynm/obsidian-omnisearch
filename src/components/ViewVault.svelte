@@ -89,6 +89,12 @@
     previousQuery = history[historySearchIndex]
   }
 
+  export function focusSearch() {
+    const el = document.querySelector('.omnisearch-input-field input') as HTMLInputElement;
+    el.focus();
+    el.select();
+  }
+
   async function nextSearchHistory() {
     const history = (await cacheManager.getSearchHistory()).filter(s => s)
     if (--historySearchIndex < 0) {
