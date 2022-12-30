@@ -51,7 +51,7 @@
           <span class="omnisearch-result__date">{modifiedDate}</span>
         </span>
 
-        {#if note.matches.length > 0}
+        {#if note.matches.length > 1}
           <span class="omnisearch-result__counter">
             {note.matches.length}&nbsp;{note.matches.length > 1
               ? 'matches'
