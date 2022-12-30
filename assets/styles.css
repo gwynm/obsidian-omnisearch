@@ -17,6 +17,7 @@
   font-size: 0.7rem;
   color: var(--text-muted);
   float: right;
+  flex-shrink: 0;
 }
 
 .omnisearch-result__counter {
