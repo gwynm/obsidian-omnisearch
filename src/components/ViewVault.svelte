@@ -229,62 +229,67 @@
   }
 </script>
 
-<InputSearch
-  initialValue="{searchQuery}"
-  on:input="{e => (searchQuery = e.detail)}"
-  placeholder="Omnisearch - Vault">
-  {#if settings.showCreateButton}
-    <button on:click="{onClickCreateNote}">Create note</button>
-  {/if}
-</InputSearch>
+<div style='display:flex;height:100%;flex-direction:column'>
+  <div style='flex:0 0'>
+    <InputSearch
+      initialValue="{searchQuery}"
+      on:input="{e => (searchQuery = e.detail)}"
+      placeholder="Omnisearch - Vault">
+      {#if settings.showCreateButton}
+        <button on:click="{onClickCreateNote}">Create note</button>
+      {/if}
+    </InputSearch>
 
-{#if indexingStepDesc}
-  <div style="text-align: center; color: var(--text-accent); margin-top: 10px">
-    ⏳ Work in progress: {indexingStepDesc}
-  </div>
-{/if}
-
-<ModalContainer>
-  {#each resultNotes as result, i}
-    <ResultItemVault
-      selected="{i === selectedIndex}"
-      note="{result}"
-      on:mousemove="{_ => (selectedIndex = i)}"
-      on:click="{onClick}" />
-  {/each}
-  <div style="text-align: center;">
-    {#if !resultNotes.length && searchQuery && !searching}
-      No results.
-    {:else if searching}
-      Searching...
+    {#if indexingStepDesc}
+      <div style="text-align: center; color: var(--text-accent); margin-top: 10px">
+        ⏳ Work in progress: {indexingStepDesc}
+      </div>
     {/if}
   </div>
-</ModalContainer>
+  <div style='flex:1 0;overflow:auto'>
+    <ModalContainer>
+      {#each resultNotes as result, i}
+        <ResultItemVault
+          selected="{i === selectedIndex}"
+          note="{result}"
+          on:mousemove="{_ => (selectedIndex = i)}"
+          on:click="{onClick}" />
+      {/each}
+      <div style="text-align: center;">
+        {#if !resultNotes.length && searchQuery && !searching}
+          No results.
+        {:else if searching}
+          Searching...
+        {/if}
+      </div>
+    </ModalContainer>
 
-<div class="prompt-instructions">
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">ctrl+j / ctrl+k</span><span>to navigate</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">ctrl ↵</span>
-    <span>create</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">ctrl+h</span>
-    <span>toggle excerpts</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">ctrl+d</span>
-    <span>delete</span>
-  </div>
-  <div class="prompt-instruction">
-    <span class="prompt-instruction-command">ctrl+g</span>
-    <span>
-      {#if $sortByDate}
-        switch to relevance
-      {:else}
-        switch to date
-      {/if}
-    </span>
+    <div class="prompt-instructions">
+      <div class="prompt-instruction">
+        <span class="prompt-instruction-command">ctrl+j / ctrl+k</span><span>to navigate</span>
+      </div>
+      <div class="prompt-instruction">
+        <span class="prompt-instruction-command">ctrl ↵</span>
+        <span>create</span>
+      </div>
+      <div class="prompt-instruction">
+        <span class="prompt-instruction-command">ctrl+h</span>
+        <span>toggle excerpts</span>
+      </div>
+      <div class="prompt-instruction">
+        <span class="prompt-instruction-command">ctrl+d</span>
+        <span>delete</span>
+      </div>
+      <div class="prompt-instruction">
+        <span class="prompt-instruction-command">ctrl+g</span>
+        <span>
+          {#if $sortByDate}
+            switch to relevance
+          {:else}
+            switch to date
+          {/if}
+        </span>
+      </div>
+    </div>
   </div>
 </div>
